@@ -2,7 +2,6 @@ from flask import Flask, request, render_template, jsonify  # Import jsonify
 import numpy as np
 import pandas as pd
 import pickle
-from flask import Flask, render_template, request, jsonify
 # pyrefly: ignore [missing-import]
 from transformers import AutoModelForCausalLM, AutoTokenizer
 # pyrefly: ignore [missing-import]
@@ -358,4 +357,6 @@ def get_medicine_recommendation(user_input):
 # remaining routes...
 
 if __name__ == '__main__':
-    app.run(debug=True)
+       import os
+       PORT = int(os.environ.get('PORT', 5000))
+       app.run(host='0.0.0.0', port=PORT, debug=False)
