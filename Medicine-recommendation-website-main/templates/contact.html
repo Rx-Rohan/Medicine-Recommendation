@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact — Med Express</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --emerald: #00e5a0;
+      --deep: #040d1a;
+      --navy: #071428;
+      --card-bg: rgba(255,255,255,0.04);
+      --border: rgba(0,229,160,0.15);
+      --text: #e8f4f0;
+      --muted: rgba(232,244,240,0.55);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--deep); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background: radial-gradient(ellipse 70% 50% at 10% 20%, rgba(0,229,160,0.10) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 90% 70%, rgba(0,120,255,0.08) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+    body::after {
+      content: ''; position: fixed; inset: 0;
+      background-image: linear-gradient(rgba(0,229,160,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,160,0.03) 1px, transparent 1px);
+      background-size: 40px 40px; pointer-events: none; z-index: 0;
+    }
+    nav.topbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 48px; background: rgba(4,13,26,0.85); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border); animation: slideDown 0.7s cubic-bezier(.16,1,.3,1) both;
+    }
+    @keyframes slideDown { from{transform:translateY(-100%);opacity:0} to{transform:translateY(0);opacity:1} }
+    .brand { font-family:'Syne',sans-serif; font-weight:800; font-size:1.5rem; color:var(--emerald); text-decoration:none; }
+    .brand span { color:var(--text); }
+    .nav-links { display:flex; gap:36px; list-style:none; }
+    .nav-links a { color:var(--muted); text-decoration:none; font-size:0.9rem; font-weight:500; transition:color 0.2s; position:relative; }
+    .nav-links a::after { content:''; position:absolute; bottom:-4px; left:0; right:0; height:1px; background:var(--emerald); transform:scaleX(0); transition:transform 0.25s; }
+    .nav-links a:hover { color:var(--emerald); }
+    .nav-links a:hover::after { transform:scaleX(1); }
+    @keyframes fadeUp { from{transform:translateY(24px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+    .page-wrapper { position:relative; z-index:1; max-width:860px; margin:0 auto; padding:140px 24px 80px; }
+
+    .page-badge {
+      display:inline-flex; align-items:center; gap:8px;
+      border:1px solid var(--border); border-radius:100px;
+      padding:6px 16px; font-size:0.78rem; color:var(--emerald);
+      letter-spacing:1.5px; text-transform:uppercase; font-weight:600;
+      margin-bottom:28px; background:rgba(0,229,160,0.05);
+      animation: fadeUp 0.7s 0.1s both;
+    }
+    .page-title {
+      font-family:'Syne',sans-serif;
+      font-size:clamp(2.2rem,6vw,3.8rem);
+      font-weight:800; letter-spacing:-1.5px; line-height:1.1;
+      margin-bottom:16px; animation: fadeUp 0.7s 0.2s both;
+    }
+    .page-title .accent { color:var(--emerald); }
+    .page-intro { color:var(--muted); font-size:1.05rem; line-height:1.75; max-width:600px; margin-bottom:56px; animation: fadeUp 0.7s 0.3s both; }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    @media(max-width:640px) { .contact-grid { grid-template-columns:1fr; } }
+
+    .contact-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 32px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      transition: transform 0.25s, box-shadow 0.25s;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .contact-card.visible { animation: fadeUp 0.6s cubic-bezier(.16,1,.3,1) forwards; }
+    .contact-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,229,160,0.1); }
+
+    .contact-icon {
+      width: 44px; height: 44px;
+      background: rgba(0,229,160,0.1);
+      border: 1px solid rgba(0,229,160,0.25);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .contact-label {
+      font-size: 0.72rem;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--emerald);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .contact-value { color: var(--text); font-size: 0.95rem; line-height: 1.6; word-break: break-all; }
+
+    .info-section {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+    }
+    @media(max-width:640px) { .info-section { grid-template-columns:1fr; } }
+
+    .info-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      transition: transform 0.25s;
+      opacity: 0; transform: translateY(20px);
+    }
+    .info-card.visible { animation: fadeUp 0.6s cubic-bezier(.16,1,.3,1) forwards; }
+    .info-card:hover { transform: translateY(-2px); }
+    .info-card .ic-emoji { font-size: 1.8rem; margin-bottom: 12px; display: block; }
+    .info-card h4 { font-family:'Syne',sans-serif; font-size:0.95rem; font-weight:700; color:var(--emerald); margin-bottom:8px; }
+    .info-card p { color:var(--muted); font-size:0.85rem; line-height:1.6; }
+  </style>
+</head>
+<body>
+  <nav class="topbar">
+    <a href="/" class="brand">Med<span>Express</span></a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/contact">Contact</a></li>
+      <li><a href="/blog">Blog</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrapper">
+    <div class="page-badge">Get In Touch</div>
+    <h1 class="page-title">Contact <span class="accent">Us</span></h1>
+    <p class="page-intro">Our dedicated team is available to assist you with any inquiries or feedback. We're just a message away.</p>
+
+    <div class="contact-grid">
+      <div class="contact-card">
+        <div class="contact-icon">📧</div>
+        <div>
+          <div class="contact-label">Email</div>
+          <div class="contact-value">pansayan1010@gmail.com</div>
+        </div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-icon">📧</div>
+        <div>
+          <div class="contact-label">Email</div>
+          <div class="contact-value">saikatsamanta624@gmail.com</div>
+        </div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-icon">📞</div>
+        <div>
+          <div class="contact-label">Phone</div>
+          <div class="contact-value">+91 7076212919</div>
+        </div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-icon">📞</div>
+        <div>
+          <div class="contact-label">Phone</div>
+          <div class="contact-value">+91 9382179280</div>
+        </div>
+      </div>
+      <div class="contact-card" style="grid-column: 1 / -1;">
+        <div class="contact-icon">📍</div>
+        <div>
+          <div class="contact-label">Location</div>
+          <div class="contact-value">New Town, Kolkata, West Bengal, India</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <div class="info-card">
+        <span class="ic-emoji">💬</span>
+        <h4>Customer Support</h4>
+        <p>Our dedicated team is available to assist you with technical questions, feedback, and general inquiries.</p>
+      </div>
+      <div class="info-card">
+        <span class="ic-emoji">📱</span>
+        <h4>Stay Connected</h4>
+        <p>Follow us on social media for the latest news, updates, and health tips from Med Express.</p>
+      </div>
+      <div class="info-card">
+        <span class="ic-emoji">⚡</span>
+        <h4>Fast Response</h4>
+        <p>We aim to respond to all inquiries within 24 hours. Your questions matter to us.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const cards = document.querySelectorAll('.contact-card, .info-card');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 80);
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    cards.forEach(c => obs.observe(c));
+  </script>
+</body>
+</html>
