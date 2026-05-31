@@ -1,0 +1,641 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Med Express</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --emerald: #00e5a0;
+      --deep: #040d1a;
+      --navy: #071428;
+      --card-bg: rgba(255,255,255,0.04);
+      --border: rgba(0,229,160,0.15);
+      --text: #e8f4f0;
+      --muted: rgba(232,244,240,0.55);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--deep);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated BG */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(0,229,160,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(0,120,255,0.10) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 50% 50%, rgba(0,229,160,0.04) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      animation: bgPulse 8s ease-in-out infinite alternate;
+    }
+    @keyframes bgPulse {
+      0% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+
+    /* Grid overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,160,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,160,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAVBAR */
+    nav.topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 48px;
+      background: rgba(4,13,26,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      animation: slideDown 0.7s cubic-bezier(.16,1,.3,1) both;
+    }
+    @keyframes slideDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+    .brand {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.5rem;
+      color: var(--emerald);
+      letter-spacing: -0.5px;
+      text-decoration: none;
+    }
+    .brand span { color: var(--text); }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      transition: color 0.2s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0; right: 0;
+      height: 1px;
+      background: var(--emerald);
+      transform: scaleX(0);
+      transition: transform 0.25s;
+    }
+    .nav-links a:hover { color: var(--emerald); }
+    .nav-links a:hover::after { transform: scaleX(1); }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 24px 60px;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 0.78rem;
+      color: var(--emerald);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 32px;
+      background: rgba(0,229,160,0.05);
+      animation: fadeUp 0.8s 0.2s cubic-bezier(.16,1,.3,1) both;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--emerald);
+      animation: blink 1.5s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    h1.hero-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -2px;
+      margin-bottom: 24px;
+      animation: fadeUp 0.8s 0.35s cubic-bezier(.16,1,.3,1) both;
+    }
+    h1.hero-title .accent { color: var(--emerald); }
+    .hero-sub {
+      max-width: 520px;
+      color: var(--muted);
+      font-size: 1.1rem;
+      line-height: 1.7;
+      margin-bottom: 56px;
+      animation: fadeUp 0.8s 0.5s cubic-bezier(.16,1,.3,1) both;
+    }
+    @keyframes fadeUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    /* FORM CARD */
+    .form-card {
+      width: 100%;
+      max-width: 680px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 48px;
+      backdrop-filter: blur(16px);
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 0.8s 0.65s cubic-bezier(.16,1,.3,1) both;
+    }
+    .form-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--emerald), transparent);
+    }
+    .form-label-styled {
+      display: block;
+      font-size: 0.78rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--emerald);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .input-wrapper {
+      position: relative;
+    }
+    .styled-input {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(0,229,160,0.2);
+      border-radius: 12px;
+      padding: 16px 20px 16px 48px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .styled-input::placeholder { color: rgba(232,244,240,0.3); }
+    .styled-input:focus {
+      border-color: var(--emerald);
+      box-shadow: 0 0 0 3px rgba(0,229,160,0.12);
+    }
+    .input-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.1rem;
+      opacity: 0.5;
+    }
+
+    .btn-voice {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,229,160,0.08);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 20px;
+      color: var(--emerald);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: all 0.2s;
+    }
+    .btn-voice:hover {
+      background: rgba(0,229,160,0.15);
+      transform: translateY(-1px);
+    }
+
+    .btn-predict {
+      width: 100%;
+      margin-top: 28px;
+      padding: 18px;
+      background: var(--emerald);
+      border: none;
+      border-radius: 14px;
+      color: var(--deep);
+      font-family: 'Syne', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-predict::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .btn-predict:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0,229,160,0.35);
+    }
+    .btn-predict:hover::before { opacity: 1; }
+    .btn-predict:active { transform: translateY(0); }
+
+    /* RESULTS */
+    .results-section {
+      position: relative;
+      z-index: 1;
+      padding: 0 24px 80px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .results-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .results-title span { color: var(--emerald); }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media(max-width:768px) { .result-grid { grid-template-columns: repeat(2,1fr); } }
+    @media(max-width:480px) { .result-grid { grid-template-columns: 1fr; } }
+
+    .result-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 20px 22px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      cursor: pointer;
+      transition: all 0.25s;
+      font-family: 'DM Sans', sans-serif;
+      text-align: left;
+      backdrop-filter: blur(8px);
+      position: relative;
+      overflow: hidden;
+    }
+    .result-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .result-btn:hover { transform: translateY(-3px); }
+    .result-btn:hover::before { opacity: 1; }
+
+    .rb-disease  { border-color: rgba(243,147,52,0.3); }
+    .rb-disease::before  { background: rgba(243,147,52,0.06); }
+    .rb-disease:hover  { box-shadow: 0 8px 30px rgba(243,147,52,0.2); }
+
+    .rb-desc    { border-color: rgba(38,138,243,0.3); }
+    .rb-desc::before    { background: rgba(38,138,243,0.06); }
+    .rb-desc:hover    { box-shadow: 0 8px 30px rgba(38,138,243,0.2); }
+
+    .rb-prec    { border-color: rgba(243,113,249,0.3); }
+    .rb-prec::before    { background: rgba(243,113,249,0.06); }
+    .rb-prec:hover    { box-shadow: 0 8px 30px rgba(243,113,249,0.2); }
+
+    .rb-med     { border-color: rgba(248,87,111,0.3); }
+    .rb-med::before     { background: rgba(248,87,111,0.06); }
+    .rb-med:hover     { box-shadow: 0 8px 30px rgba(248,87,111,0.2); }
+
+    .rb-work    { border-color: rgba(153,247,65,0.3); }
+    .rb-work::before    { background: rgba(153,247,65,0.06); }
+    .rb-work:hover    { box-shadow: 0 8px 30px rgba(153,247,65,0.2); }
+
+    .rb-diet    { border-color: rgba(229,226,61,0.3); }
+    .rb-diet::before    { background: rgba(229,226,61,0.06); }
+    .rb-diet:hover    { box-shadow: 0 8px 30px rgba(229,226,61,0.2); }
+
+    .rb-emoji { font-size: 1.5rem; }
+    .rb-label {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+    .rb-sub { font-size: 0.78rem; color: var(--muted); }
+
+    /* MODAL */
+    .modal-content {
+      background: var(--navy) !important;
+      border: 1px solid var(--border) !important;
+      border-radius: 20px !important;
+      color: var(--text) !important;
+    }
+    .modal-header {
+      border-bottom: 1px solid var(--border) !important;
+      padding: 20px 28px !important;
+    }
+    .modal-title {
+      font-family: 'Syne', sans-serif !important;
+      font-weight: 700 !important;
+      color: var(--emerald) !important;
+    }
+    .modal-body {
+      padding: 28px !important;
+      color: var(--text) !important;
+    }
+    .modal-body ul { padding-left: 20px; }
+    .modal-body li { margin-bottom: 8px; line-height: 1.6; }
+    .btn-close { filter: invert(1) !important; }
+
+    /* CHATBOT FLOAT */
+    .chatbot-float {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 999;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--emerald);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 24px rgba(0,229,160,0.4);
+      transition: all 0.25s;
+      text-decoration: none;
+      animation: floatPulse 3s ease-in-out infinite;
+    }
+    @keyframes floatPulse {
+      0%,100% { box-shadow: 0 4px 24px rgba(0,229,160,0.4); }
+      50%      { box-shadow: 0 4px 40px rgba(0,229,160,0.7); }
+    }
+    .chatbot-float:hover { transform: scale(1.1); }
+    .chatbot-float img { width: 28px; height: 28px; }
+
+    /* Particles */
+    .particle {
+      position: fixed;
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      background: var(--emerald);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 0;
+      animation: floatParticle linear infinite;
+    }
+    @keyframes floatParticle {
+      0%   { opacity: 0; transform: translateY(0) scale(0); }
+      10%  { opacity: 0.6; }
+      90%  { opacity: 0.2; }
+      100% { opacity: 0; transform: translateY(-100vh) scale(1.5); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="topbar">
+    <a href="#" class="brand">Med<span>Express</span></a>
+    <ul class="nav-links">
+      <li><a href="#">Home</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/contact">Contact</a></li>
+      <li><a href="/blog">Blog</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge">AI-Powered Health Intelligence</div>
+    <h1 class="hero-title">Your Smart<br><span class="accent">Health</span> Companion</h1>
+    <p class="hero-sub">Enter your symptoms and let our machine learning model identify potential conditions with personalized health recommendations.</p>
+
+    <div class="form-card">
+      <form action="/predict" method="post">
+        <label class="form-label-styled">Describe Your Symptoms</label>
+        <div class="input-wrapper">
+          <span class="input-icon">🩺</span>
+          <input type="text" class="styled-input" id="symptoms" name="symptoms"
+                 placeholder="e.g. itching, fatigue, headache, fever...">
+        </div>
+        <button type="button" id="startSpeechRecognition" class="btn-voice">
+          🎙️ &nbsp;Use Voice Input
+        </button>
+        <button type="submit" class="btn-predict">
+          Analyze Symptoms →
+        </button>
+      </form>
+    </div>
+  </section>
+
+  {% if predicted_disease %}
+  <!-- Results -->
+  <section class="results-section">
+    <h2 class="results-title">AI <span>Diagnosis</span> Results</h2>
+    <div class="result-grid">
+      <button class="result-btn rb-disease" data-bs-toggle="modal" data-bs-target="#diseaseModal">
+        <span class="rb-emoji">🦠</span>
+        <span class="rb-label">Disease</span>
+        <span class="rb-sub">Predicted condition</span>
+      </button>
+      <button class="result-btn rb-desc" data-bs-toggle="modal" data-bs-target="#descriptionModal">
+        <span class="rb-emoji">📋</span>
+        <span class="rb-label">Description</span>
+        <span class="rb-sub">Detailed overview</span>
+      </button>
+      <button class="result-btn rb-prec" data-bs-toggle="modal" data-bs-target="#precautionModal">
+        <span class="rb-emoji">🛡️</span>
+        <span class="rb-label">Precaution</span>
+        <span class="rb-sub">Safety measures</span>
+      </button>
+      <button class="result-btn rb-med" data-bs-toggle="modal" data-bs-target="#medicationsModal">
+        <span class="rb-emoji">💊</span>
+        <span class="rb-label">Medications</span>
+        <span class="rb-sub">Suggested medicines</span>
+      </button>
+      <button class="result-btn rb-work" data-bs-toggle="modal" data-bs-target="#workoutsModal">
+        <span class="rb-emoji">🏃</span>
+        <span class="rb-label">Workouts</span>
+        <span class="rb-sub">Exercise guidance</span>
+      </button>
+      <button class="result-btn rb-diet" data-bs-toggle="modal" data-bs-target="#dietsModal">
+        <span class="rb-emoji">🥗</span>
+        <span class="rb-label">Diet Plan</span>
+        <span class="rb-sub">Nutritional advice</span>
+      </button>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- Modals -->
+  <div class="modal fade" id="diseaseModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">🦠 Predicted Disease</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body"><p>{{ predicted_disease }}</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="descriptionModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">📋 Description</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body"><p>{{ dis_des }}</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="precautionModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">🛡️ Precaution</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <ul>{% for i in my_precautions %}<li>{{ i }}</li>{% endfor %}</ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="medicationsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">💊 Medications</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <ul>{% for i in medications %}<li>{{ i }}</li>{% endfor %}</ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="workoutsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">🏃 Workouts</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <ul>{% for i in workout %}<li>{{ i }}</li>{% endfor %}</ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="dietsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">🥗 Diet Plan</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <ul>{% for i in my_diet %}<li>{{ i }}</li>{% endfor %}</ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chatbot Float Button -->
+  <a href="http://127.0.0.1:5001/" class="chatbot-float" title="Chat with Med Express">
+    <img src="https://static-00.iconduck.com/assets.00/chat-icon-2048x2048-i7er18st.png" alt="Chat">
+  </a>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Particles
+    for (let i = 0; i < 18; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.bottom = '-10px';
+      p.style.animationDuration = (8 + Math.random() * 14) + 's';
+      p.style.animationDelay = (Math.random() * 10) + 's';
+      p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
+      p.style.opacity = Math.random() * 0.5;
+      document.body.appendChild(p);
+    }
+
+    // Speech Recognition
+    const btn = document.getElementById('startSpeechRecognition');
+    const input = document.getElementById('symptoms');
+    if (btn) {
+      btn.addEventListener('click', () => {
+        if (!('webkitSpeechRecognition' in window)) {
+          alert('Speech recognition not supported in this browser.');
+          return;
+        }
+        const r = new webkitSpeechRecognition();
+        r.lang = 'en-US';
+        btn.textContent = '🔴 Listening...';
+        r.onresult = e => {
+          input.value = e.results[0][0].transcript.split(' ').join(',');
+          btn.textContent = '🎙️  Use Voice Input';
+        };
+        r.onerror = () => { btn.textContent = '🎙️  Use Voice Input'; };
+        r.onend   = () => { btn.textContent = '🎙️  Use Voice Input'; };
+        r.start();
+      });
+    }
+
+    // Card entrance animation
+    document.querySelectorAll('.result-btn').forEach((el, i) => {
+      el.style.animationDelay = (i * 0.08) + 's';
+      el.style.animation = 'fadeUp 0.6s ' + (i * 0.08) + 's cubic-bezier(.16,1,.3,1) both';
+    });
+  </script>
+</body>
+</html>
