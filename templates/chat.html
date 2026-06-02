@@ -279,7 +279,7 @@
       $.ajax({
         data: { msg: text },
         type: 'POST',
-        url: '/get'
+        url: '/chat'
       }).done(function(data) {
         removeTyping();
         addMessage(data, false);

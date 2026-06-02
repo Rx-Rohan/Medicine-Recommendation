@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, jsonify  # Import jsonify
 import numpy as np
 import pandas as pd
 import pickle
+from flask import Flask, render_template, request, jsonify
 # pyrefly: ignore [missing-import]
 from transformers import AutoModelForCausalLM, AutoTokenizer
 # pyrefly: ignore [missing-import]
@@ -309,11 +310,6 @@ def blog():
     return render_template("blog.html")
 # existing imports and code...
 
-# Define a route for rendering the index page
-@app.route("/")
-def render_index():
-    return render_template("chat.html")
-
 # Define a route for handling chat functionality
 @app.route("/chat", methods=["POST"])
 def chat():
@@ -357,6 +353,4 @@ def get_medicine_recommendation(user_input):
 # remaining routes...
 
 if __name__ == '__main__':
-       import os
-       PORT = int(os.environ.get('PORT', 5000))
-       app.run(host='0.0.0.0', port=PORT, debug=False)
+    app.run(host='0.0.0.0', port=5001, debug=True)
